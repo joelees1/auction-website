@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!--imports bootstrap-css elements to make the website look nicer -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+      
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    
+    <!-- adds a title and logo to the tab in the browser used -->
+    <title>Auction</title>
+    <link rel="shortcut icon" href="https://mars-fortune.codio-box.uk/auction/static/favicon.ico" type="image/x-icon">
+  </head>
+    
+  <body>
+    
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #C1DFE5;">
+
+      <a class="navbar-brand" href="/">
+        <!-- inputs a brand icon in the navbar, followed by the website name -->
+        <img src="https://mars-fortune.codio-box.uk/auction/static/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">
+        Auction
+      </a>
+        
+      <!-- button to replace navbar when screen width it too small -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+        
+      <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+            
+          <!-- displays different items on the navbar depending on wether the user is logged in -->
+          {% if user.is_authenticated %}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          
+          <!-- dropdown menu "For you" -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              For you
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">My items</a>
+              <a class="dropdown-item" href="#">Sell</a>
+            </div>
+          </li>
+            
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          
+          {% else %} <!-- if user is not logged in -->
+          <a class="nav-item nav-link" id="login" href="/login">Login</a>
+          <a class="nav-item nav-link" id="register" href="/register">Register</a>
+          {% endif %}
+            
+        </div>
+      </div>
+    </nav>
+    
+    <!-- gets flashed messages and configures what to flash given each category -->
+    {% with flashes = get_flashed_messages(with_categories=true) %} 
+    {% if flashes %} 
+    {% for category, flash in flashes %} 
+    {% if category == "warning" %}
+    
+    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+      {{ flash }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+      
+    {% elif category == "success" %}
+    <div class="alert alert-success alter-dismissable fade show" role="alert">
+      {{ flash }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+      
+    {% endif %} 
+    {% endfor %} 
+    {% endif %}
+    {% endwith %}
+    
+    <!-- provides a container other pages can use for their main body-->
+    <div class="container">{% block body %} {% endblock %}</div>
+    
+    <!--loads javascript related to bootstrap, animations etc-->
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+      
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+      
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+      
+  </body>
+    
+</html>

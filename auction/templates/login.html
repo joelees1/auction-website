@@ -1,0 +1,21 @@
+{% extends "base.html"%} <!-- 'inherits' from the base.html file using jinga -->
+
+{% block body %} <!-- replaces the body block -->
+<form method="POST">
+    <h2 align="center">Login</h2>
+    
+    <!-- forms for getting email and password variables -->
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required/>
+    </div>
+    
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="password" required/>
+    </div>
+    
+    <br/>
+    <button type="submit" class="btn btn-dark">Sign in</button>
+</form>
+{% endblock %}
