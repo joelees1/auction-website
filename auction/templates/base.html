@@ -27,7 +27,7 @@
     
   <body>
     
-    <!-- Navigation bar -->
+    <!-- Navigation bar links to different areas/functions of the website-->
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #C1DFE5;">
 
       <a class="navbar-brand" href="/">
@@ -48,14 +48,14 @@
           {% if user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           
-          <!-- dropdown menu "For you" -->
+          <!-- dropdown menu "For you" links to account related pages-->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               For you
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">My items</a>
-              <a class="dropdown-item" href="#">Sell</a>
+              <a class="dropdown-item" href="/myitems">My items</a>
+              <a class="dropdown-item" href="/sell">Sell new item</a>
             </div>
           </li>
             
@@ -97,6 +97,7 @@
     {% endwith %}
     
     <!-- provides a container other pages can use for their main body-->
+    <br/>
     <div class="container">{% block body %} {% endblock %}</div>
     
     <!--loads javascript related to bootstrap, animations etc-->

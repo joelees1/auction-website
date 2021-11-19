@@ -8,17 +8,19 @@ DB_NAME = "database.db"
 
 def app(): # creates and initialises a flask app
     application = Flask(__name__) # initializes the app
-    application.secret_key = 'password' # encrypts cookies and session data for the website
+    application.secret_key = "password" # encrypts cookies and session data for the website
     
     # stores sqlite database in the current directory
-    application.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    application.config["SQLALCHEMY_DATABASE_URI"] = f'sqlite:///{DB_NAME}'
     db.init_app(application) # initialises database with the application
+    
+    # sets where uploaded images are saved
+    application.config["IMAGE_UPLOADS"] = "/home/codio/workspace/auction/static/images"
     
     from .routes import routes # imports the routes from the route file
     application.register_blueprint(routes, url_prefix="/")
-    
+        
     from .database_models import User, Item # imports the database classes from the database_models file
-    
     create_db(application)
     
     login_manager = LoginManager()
@@ -31,6 +33,7 @@ def app(): # creates and initialises a flask app
     
     return application
 
-def create_db(application): # checks if the database exists already, creating it if not
-    if not path.exists('auction/' + DB_NAME): # determines if database.db is a path in the directory
-        db.create_all(app=application)
+def create_db(application):
+    # checks if the database exists already, creating it if not
+    if not path.exists("auction/" + DB_NAME): # determines if database.db is a path in the directory
+        db.create_all(app=application) # creates the database

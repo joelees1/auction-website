@@ -1,0 +1,31 @@
+{% extends "base.html"%} <!-- 'inherits' from the base.html file using jinga -->
+
+{% block body %}
+
+<h3 align="center">{{user.username}}'s items for sale</h3>
+
+<!-- displays a list of all the items put up by the current user, 
+using the relationship between the user and item tables -->
+
+<!-- basically same code as home page, 
+but just displays the items the current user has up for sale -->
+
+<br/>
+<div class="row">
+  {% for item in user.items %} <!-- for loop prints information about each item -->
+    <div class="col-12 col-md-6 col-lg-4 mb-4"> <!-- moves cards underneath eachother when tab is small -->
+      <!-- creates a card that displays a picture and info about the item-->
+      <div class="card" style="width: 18rem;">
+
+        <!-- gets the relavent image from the static/images folder under the item_id.jpg -->
+        <img class="card-img-top" src="/static/images/{{item.item_id}}.jpg">
+        <div class="card-body">
+          <h5 class="card-title">{{item.item_name}}</h5>
+          <p class="card-text">£{{item.start_bid}}</p>
+          <a href="#">More information</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
