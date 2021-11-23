@@ -9,15 +9,23 @@
 <div class="row">
   {% for item in items %} <!-- for loop prints information about each item -->
     <div class="col-12 col-md-6 col-lg-4 mb-4"> <!-- moves cards underneath eachother when tab is small -->
+        
       <!-- creates a card that displays a picture and info about the item-->
       <div class="card" style="width: 18rem;">
 
         <!-- gets the relavent image from the static/images folder under the item_id.jpg -->
-        <img class="card-img-top" src="/static/images/{{item.item_id}}.jpg">
+        <img class="card-img-top border-bottom" src="/static/images/{{item.item_id}}.jpg">
         <div class="card-body">
           <h5 class="card-title">{{item.item_name}}</h5>
           <p class="card-text">£{{item.start_bid}}</p>
-          <a href="#">More information</a>
+            
+          {% for user in users %}
+            {% if user.id == item.user_id%}
+              <p class="card-text">Added by {{user.username}} on {{item.date_only}}</p>
+            {% endif %}
+          {% endfor %}
+            
+          <a href="{{ url_for('routes.item_info', item_id=item.item_id) }}">More information</a>
         </div>
       </div>
     </div>

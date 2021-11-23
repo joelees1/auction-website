@@ -18,12 +18,8 @@ ALLOWED_EXTENSIONS = set(['jpg'])
 @login_required # requires the user to be logged in to access
 def home_page():
     items = Item.query.all() # gets all rows of items
-    return render_template("home_page.html", items=items, user=current_user, extensions=ALLOWED_EXTENSIONS) # sends items to the html and keeps track of login status
-
-@routes.route("/myitems", methods=['GET', 'POST'])
-@login_required
-def my_items(): # shows items the user has for put sale
-    return render_template("my_items.html", user=current_user)
+    users = User.query.all() # gets all rows of items
+    return render_template("home_page.html", items=items, user=current_user, users=users, extensions=ALLOWED_EXTENSIONS) # sends items to the html and keeps track of login status
 
 @routes.route("/login", methods=['GET', 'POST'])
 def login(): # users can login to the website using an existing account
@@ -48,6 +44,7 @@ def login(): # users can login to the website using an existing account
 def register(): # users can register for a new account, saves new user to the database
     if request.method == 'POST':
         email = request.form.get("email") # gets data from the form
+        phone = request.form.get("phone")
         username = request.form.get("username")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
@@ -64,7 +61,7 @@ def register(): # users can register for a new account, saves new user to the da
         
         else: #add new user to the database
             #creates a new User object, and applies a hashing algorithm to the password
-            new_user = User(email=email, username=username, password=generate_password_hash(password, method='sha256'))
+            new_user = User(email=email, phone=phone, username=username, password=generate_password_hash(password, method='sha256'))
             db.session.add(new_user)
             db.session.commit() # commits the new user
             
@@ -122,3 +119,37 @@ def sell(): # user can enter information about an item they would like to add to
                 db.session.commit()
         
     return render_template("sell.html", user=current_user)
+
+@routes.route("/myitems", methods=['GET', 'POST'])
+@login_required
+def my_items(): # shows items the user has for put sale
+    length = len(current_user.items) # how many items the user has for sale
+    if length > 0:
+        return render_template("my_items.html", user=current_user) # shows the user their items
+    else:
+        return render_template("no_items.html", user=current_user) # tells the user they have nothing for sale
+    
+    
+@routes.route("/item/<int:item_id>", methods=['GET', 'POST'])
+@login_required
+def item_info(item_id): # route shows users a dedicated page for each item, with all its information
+    user = current_user
+    users = User.query.all() # gets all users
+    item = Item.query.filter_by(item_id=item_id).first() # finds the item the user clicked ons information
+    return render_template("item.html", user=current_user, users=users, item=item)
+
+@routes.route("/delete/<int:item_id>", methods=['GET', 'POST'])
+@login_required
+def item_delete(item_id): # allows a user to delete their item from the website
+    user=current_user
+    item = Item.query.filter_by(item_id=item_id).first() # finds the item they clicked on
+    
+    if item.user_id == user.id: # if the current user is the items owner
+        Item.query.filter_by(item_id=item_id).delete() # deletes the item
+        db.session.commit()
+        flash("Item deleted", category="success")
+    
+    else:
+        flash("Unauthorised user", category="warning") # tells the user if they try to delete someone elses item
+        
+    return redirect(url_for('routes.home_page')) # redirects to the home page

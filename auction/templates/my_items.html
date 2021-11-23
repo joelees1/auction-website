@@ -2,14 +2,13 @@
 
 {% block body %}
 
-<h3 align="center">{{user.username}}'s items for sale</h3>
+<h3 align="center">{{user.username}}'s items for sale:</h3>
 
 <!-- displays a list of all the items put up by the current user, 
 using the relationship between the user and item tables -->
 
 <!-- basically same code as home page, 
 but just displays the items the current user has up for sale -->
-
 <br/>
 <div class="row">
   {% for item in user.items %} <!-- for loop prints information about each item -->
@@ -18,11 +17,13 @@ but just displays the items the current user has up for sale -->
       <div class="card" style="width: 18rem;">
 
         <!-- gets the relavent image from the static/images folder under the item_id.jpg -->
-        <img class="card-img-top" src="/static/images/{{item.item_id}}.jpg">
+        <img class="card-img-top border-bottom" src="/static/images/{{item.item_id}}.jpg">
         <div class="card-body">
           <h5 class="card-title">{{item.item_name}}</h5>
           <p class="card-text">£{{item.start_bid}}</p>
-          <a href="#">More information</a>
+          <p class="card-text">Added {{item.date_only}}</p>
+          <a href="{{ url_for('routes.item_info', item_id=item.item_id) }}" class="card-link">More information</a>
+          <a href="{{ url_for('routes.item_delete', item_id=item.item_id) }}" class="card-link text-danger">Delete item</a>
         </div>
       </div>
     </div>

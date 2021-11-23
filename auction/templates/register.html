@@ -11,6 +11,17 @@
     </div>
     
     <div class="form-group">
+      <label for="phone">Phone number</label>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">+44</div>
+        </div>
+        <!-- adds validation against non-numeric and negative inputs -->
+        <input type="number" min="1" class="form-control" id="phone" name="phone" placeholder="phone number" required/>
+      </div>
+    </div>
+    
+    <div class="form-group">
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" name="username" placeholder="username" required/>
     </div>
