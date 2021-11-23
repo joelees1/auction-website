@@ -1,7 +1,6 @@
 {% extends "base.html"%} <!-- 'inherits' from the base.html file using jinga -->
 
 {% block body %}
-
 <h3 align="center">{{user.username}}'s items for sale:</h3>
 
 <!-- displays a list of all the items put up by the current user, 
@@ -15,15 +14,51 @@ but just displays the items the current user has up for sale -->
     <div class="col-12 col-md-6 col-lg-4 mb-4"> <!-- moves cards underneath eachother when tab is small -->
       <!-- creates a card that displays a picture and info about the item-->
       <div class="card" style="width: 18rem;">
-
+          
         <!-- gets the relavent image from the static/images folder under the item_id.jpg -->
         <img class="card-img-top border-bottom" src="/static/images/{{item.item_id}}.jpg">
         <div class="card-body">
-          <h5 class="card-title">{{item.item_name}}</h5>
-          <p class="card-text">£{{item.start_bid}}</p>
-          <p class="card-text">Added {{item.date_only}}</p>
-          <a href="{{ url_for('routes.item_info', item_id=item.item_id) }}" class="card-link">More information</a>
-          <a href="{{ url_for('routes.item_delete', item_id=item.item_id) }}" class="card-link text-danger">Delete item</a>
+            
+          <!-- if statement changes card contents, including sold badge and actions buttons depending on sold value -->
+          {% if item.sold == True %}
+            
+            <!-- shows a sold badge if the item has been marked as sold -->
+            <h5 class="card-title">{{item.item_name}} <span class="badge bg-success text-light">Sold</span></h5>
+            <main class="card-text">£{{item.start_bid}}</main>
+            <p><small class="card-text text-muted">Added on {{item.date_only}}</small></p>
+            
+            <!-- dropdown with user actions regarding the item -->
+            <div class="dropdown">
+              <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+                Actions
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" href="{{ url_for('routes.item_info', item_id=item.item_id)}}">More information</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="{{ url_for('routes.item_delete', item_id=item.item_id)}}">Delete item</a></li>
+              </ul>
+            </div>
+            
+          {% else %}
+            
+            <h5 class="card-title">{{item.item_name}}</h5>
+            <main class="card-text">£{{item.start_bid}}</main>
+            <p><small class="card-text text-muted">Added on {{item.date_only}}</small></p>
+            
+            <!-- dropdown with user actions regarding the item -->
+            <div class="dropdown">
+              <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+                Actions
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" href="{{ url_for('routes.item_info', item_id=item.item_id)}}">More information</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('routes.sold', item_id=item.item_id)}}">Mark as sold</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="{{ url_for('routes.item_delete', item_id=item.item_id)}}">Delete item</a></li>
+              </ul>
+            </div>
+            
+          {% endif %}
         </div>
       </div>
     </div>

@@ -144,6 +144,7 @@ def item_delete(item_id): # allows a user to delete their item from the website
     user=current_user
     item = Item.query.filter_by(item_id=item_id).first() # finds the item they clicked on
     
+    # prevents another user deleting items they don't own
     if item.user_id == user.id: # if the current user is the items owner
         Item.query.filter_by(item_id=item_id).delete() # deletes the item
         db.session.commit()
@@ -153,3 +154,19 @@ def item_delete(item_id): # allows a user to delete their item from the website
         flash("Unauthorised user", category="warning") # tells the user if they try to delete someone elses item
         
     return redirect(url_for('routes.home_page')) # redirects to the home page
+
+@routes.route("/sold/<int:item_id>", methods=['GET', 'POST'])
+@login_required
+def sold(item_id): # allows a user to mark an item as sold
+    user=current_user
+    item = Item.query.filter_by(item_id=item_id).first() # finds the item they want to mark
+    
+    # prevents another user marking items they don't own
+    if item.user_id == user.id: # if the current user is the items owner
+        item.sold = True
+        db.session.commit()
+    
+    else:
+        flash("Unauthorised user", category="warning") # tells the user if they try to delete someone elses item
+        
+    return redirect(url_for('routes.my_items')) # redirects to the home page

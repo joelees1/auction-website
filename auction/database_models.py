@@ -12,6 +12,7 @@ class Item(db.Model): # class that stores info about each item on the system
     date_only = db.Column(db.Date, server_default=func.date()) # just the date the item was made
     date = db.Column(db.DateTime(timezone=True), server_default=func.now()) # defaults the datetime to now
     
+    sold = db.Column(db.Boolean(), default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # must pass a valid id of an existing user to this object, 1 to many
 
 class User(db.Model, UserMixin): # creates each user in the database
