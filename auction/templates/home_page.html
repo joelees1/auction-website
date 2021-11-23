@@ -8,28 +8,38 @@
 <!-- displays a list of all the items for sale on the website -->
 <div class="row">
   {% for item in items %} <!-- for loop prints information about each item -->
-    {% if item.sold == False %}
-    <div class="col-12 col-md-6 col-lg-4 mb-4"> <!-- moves cards underneath eachother when tab is small -->
+    {% if item.sold == False %} <!-- only shows items that are not sold or expired -->
+    {% if dt < item.auction_end %}
+      <div class="col-12 col-md-6 col-lg-4 mb-4"> <!-- moves cards underneath eachother when tab is small -->
         
-      <!-- creates a card that displays a picture and info about the item-->
-      <div class="card" style="width: 18rem;">
+        <!-- creates a card that displays a picture and info about the item-->
+        <div class="card" style="width: 18rem;">
 
-        <!-- gets the relavent image from the static/images folder under the item_id.jpg -->
-        <img class="card-img-top border-bottom" src="/static/images/{{item.item_id}}.jpg">
-        <div class="card-body">
-          <h5 class="card-title">{{item.item_name}}</h5>
-          <main class="card-text">£{{item.start_bid}}</main>
+          <!-- gets the relavent image from the static/images folder under the item_id.jpg -->
+          <img class="card-img-top border-bottom" src="/static/images/{{item.item_id}}.jpg">
+          <div class="card-body">
+            <h5 class="card-title">{{item.item_name}}</h5>
             
-          {% for user in users %}
-            {% if user.id == item.user_id%}
-              <p><small class="card-text text-muted">Added by {{user.username}} on {{item.date_only}}</small></p>
+            <!-- shows different variables depending on if the item has been bid on before -->
+            {% if item.current_bid == 0 %} 
+              <main class="card-text">£{{item.price}}</main>
+            {% else%}
+              <main class="card-text">Current bid: £{{item.current_bid}}</main>
             {% endif %}
-          {% endfor %}
             
-          <a href="{{ url_for('routes.item_info', item_id=item.item_id) }}">More information</a>
+            <!-- shows who the seller is -->
+            {% for user in users %}
+              {% if user.id == item.user_id%}
+                <p><small class="card-text text-muted">Added by {{user.username}} on {{item.date.strftime("%d/%m/%Y")}}</small></p>
+              {% endif %}
+            {% endfor %}
+            
+            <!-- link to the specific item page -->
+            <a href="{{ url_for('routes.item_info', item_id=item.item_id) }}">More information</a>
+          </div>
         </div>
       </div>
-    </div>
+    {% endif %}
     {% endif %}
   {% endfor %}
 </div>

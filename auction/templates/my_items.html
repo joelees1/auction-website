@@ -24,8 +24,8 @@ but just displays the items the current user has up for sale -->
             
             <!-- shows a sold badge if the item has been marked as sold -->
             <h5 class="card-title">{{item.item_name}} <span class="badge bg-success text-light">Sold</span></h5>
-            <main class="card-text">£{{item.start_bid}}</main>
-            <p><small class="card-text text-muted">Added on {{item.date_only}}</small></p>
+            <main class="card-text">Sold for: £{{item.current_bid}}</main>
+            <p><small class="card-text text-muted">Added on {{item.date.strftime("%d/%m/%Y")}}</small></p>
             
             <!-- dropdown with user actions regarding the item -->
             <div class="dropdown">
@@ -38,12 +38,30 @@ but just displays the items the current user has up for sale -->
                 <li><a class="dropdown-item text-danger" href="{{ url_for('routes.item_delete', item_id=item.item_id)}}">Delete item</a></li>
               </ul>
             </div>
+          
+          {% elif dt > item.auction_end %}
+            <!-- shows an expired badge if the auction has expired -->
+            <h5 class="card-title">{{item.item_name}} <span class="badge bg-danger text-light">Expired</span></h5>
+            {% if item.current_bid > 0 %}
+              <p class="card-text">Mark as sold to continue</p>
+              <a class="btn btn-danger" href="{{ url_for('routes.sold', item_id=item.item_id)}}" role="button">Mark as sold</a>
+            
+            {% elif item.current_bid == 0 %}
+              <p class="card-text">Item did not sell</p>
+              <a class="btn btn-danger" href="{{ url_for('routes.item_delete', item_id=item.item_id)}}" role="button">Delete item</a>
+            {% endif %}
             
           {% else %}
             
             <h5 class="card-title">{{item.item_name}}</h5>
-            <main class="card-text">£{{item.start_bid}}</main>
-            <p><small class="card-text text-muted">Added on {{item.date_only}}</small></p>
+            
+            {% if item.current_bid == 0 %}
+              <main class="card-text">£{{item.price}}</main>
+            {% else%}
+              <main class="card-text">Current bid: £{{item.current_bid}}</main>
+            {% endif %}
+            
+            <p><small class="card-text text-muted">Added on {{item.date.strftime("%d/%m/%Y")}}</small></p>
             
             <!-- dropdown with user actions regarding the item -->
             <div class="dropdown">
