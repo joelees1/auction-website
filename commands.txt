@@ -1,2 +1,12 @@
+install modules using pip3 if necessary
+
+in the terminal:
 . venv/bin/activate
-FLASK_APP=main.py FLASK_ENV=development flask run --host=0.0.0.0
+export FLASK_APP=main.py
+flask run --host=0.0.0.0
+
+go to:
+https://mars-fortune-5000.codio-box.uk/
+
+seller1@gmail.com, p455w0rd
+seller2@gmail.com, p455w0rd

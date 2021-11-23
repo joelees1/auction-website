@@ -36,5 +36,5 @@ def app(): # creates and initialises a flask app
 
 def create_db(app):
     # checks if the database exists already, creating it if not
-    #if not path.exists("auction/" + DB_NAME): # determines if database.db is a path in the directory
-    db.create_all(app=app) # creates the database
+    if not path.exists("auction/" + DB_NAME): # determines if database.db is a path in the directory
+        db.create_all(app=app) # creates the database
