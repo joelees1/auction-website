@@ -191,7 +191,7 @@ def sold(item_id): # allows a user to mark an item as sold
     
     # prevents another user marking items they don't own
     if item.user_id == user.id: # if the current user is the items owner
-        item.sold = True
+        item.sold = False
         db.session.commit()
     
     else:
@@ -228,21 +228,24 @@ def bid(item_id): # allows a user to bid on an item
 
 
 def notify_winner(winner, item): # emails a user if they win an auction
-    message = "you have won the "+item.item_name+" auction!!" # not allowing me to send an email with a link in it, coming in blank
-    winner_email = winner.email
-    send_email("pythonflaskemail@gmail.com", "josephlees79@gmail.com", message) # changed reciever to reduce spam when testing
+    subj = "You won an auction!"
+    body = "Hey {}!".format(winner.username)
+    body += "\nYou just won the {} auction!".format(item.item_name) # not allowing me to send an email with a link in it, coming in blank
+    send_email("pythonflaskemail@gmail.com", winner.email, subj, body) # changed reciever to reduce spam when testing
 
     
 def notify_outbid(user, item): # emails a user if they are outbid
-    message = "you have been outbid on the "+item.item_name+" auction!" # wont allow me to put a link in the email
-    outbid_email = user.email
-    send_email("pythonflaskemail@gmail.com", "josephlees79@gmail.com", message)
+    subj = "You were just outbid!"
+    body = "Hey {}!".format(user.username)
+    body += "\nYou just got outbid on the {} auction!".format(item.item_name) # wont allow me to put a link in the email
+    send_email("pythonflaskemail@gmail.com", user.email, subj, body)
                     
         
-def send_email(sender, reciever, message): # sends the email using smtplib module
+def send_email(sender, reciever, subj, message): # sends the email using smtplib module
     password = "Python150*"
+    msg = "From: %s\nTo: %s\nSubject: %s\n\n%s" % ( sender, reciever, subj, message )
     
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
     server.login(sender, password)
-    server.sendmail(sender, "josephlees79@gmail.com", message)
+    server.sendmail(sender, "josephlees79@gmail.com", msg)
