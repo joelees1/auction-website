@@ -1,0 +1,33 @@
+{% extends "base.html"%} <!-- 'inherits' from the base.html file using jinga -->
+
+{% block body %}
+<!-- shows an expired items full information on its own page -->
+
+<div class="container">
+  <div class="row">
+    
+    <!-- dedicates half the screen to a full size image of the item -->
+    <div class="col-md-6">
+      <img src="/static/images/{{item.item_id}}.jpg" class="img-fluid">
+    </div>
+      
+    <!-- the other side of the screen is for the item info -->
+    <div class="col-md-6">
+      <h1>{{item.item_name}} <span class="badge bg-danger text-light">Expired</span></h1><!-- expired badge -->
+      <h4>About this item:</h4>
+        
+      <!-- shows how much the item sold for, if at all -->
+      {% if item.current_bid > 0 %}
+        <h6 class="text-muted">Asking price: £{{item.price}}</h6>
+        <h6 class="text-muted">Sold for: £{{item.current_bid}}</h6>
+      {% else %}
+        <h6 class="text-muted">Item did not sell</h6>
+      {% endif %}
+        
+      <p><em>"{{item.description}}"</em></p>
+      <p><small class="text-muted">Added on {{item.date.strftime("%d/%m/%Y")}}</small></p>
+        
+    </div>
+  </div>
+</div>
+{% endblock %}

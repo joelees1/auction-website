@@ -1,0 +1,13 @@
+{% extends "base.html"%} <!-- 'inherits' from the base.html file using jinga -->
+
+{% block body %}
+<!-- shows a special page if the user has no items for sale -->
+
+<img src="/static/sadface.jpg" width="30" height="30" class="img-fluid mx-auto d-block" alt=""><br/>
+<p href="/" class="text-center">oops looks like you have no items for sale!</p><br/>
+
+<!-- gives the user a button to take them to the sell page -->
+<div class="text-center">
+    <a class="btn btn-dark" href="/sell" role="button">sell an item</a>
+</div>
+{% endblock %}

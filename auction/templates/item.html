@@ -1,0 +1,83 @@
+{% extends "base.html"%} <!-- 'inherits' from the base.html file using jinga -->
+
+{% block body %}
+<!-- shows an items full information on its own page -->
+
+<div class="container">
+  <div class="row">
+    
+    <!-- dedicates half the screen to a full size image of the item -->
+    <div class="col-md-6">
+      <img src="/static/images/{{item.item_id}}.jpg" class="img-fluid">
+    </div>
+      
+    <!-- the other side of the screen is for the item info -->
+    <div class="col-md-6">
+      <h1>{{item.item_name}}</h1>
+      <h4>About this item:</h4>
+      
+      <!-- shows the current bid if there is one -->
+      {% if item.current_bid > 0 %}
+        <h6 class="text-muted">Current bid: £{{item.current_bid}}</h6>
+      {% endif %}
+        
+      <h6 class="text-muted">Starting price: £{{item.price}}</h6>
+      <p><em>"{{item.description}}"</em></p>
+      <main><small class="text-muted">Added on {{item.date.strftime("%d/%m/%Y")}}</small></main>
+      <p><small class="text-muted">Auction ends {{item.auction_end.strftime(" %H:%M, %d/%m/%Y")}}</small></p>
+      
+      <!-- only gives the option to bid if the item is not owned by the current user -->
+      {% if not user.id == item.user_id %}
+      <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#BidModal">
+        Place a bid
+      </button>
+        
+      <!-- allows users to enter their bid -->
+      <div class="modal fade" id="BidModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              
+            <div class="modal-header">
+                
+              {% if item.current_bid == 0 %}
+                <h3 class="modal-title">Minimum bid: £{{item.price}}</h3>
+              {% else %}
+                <h3 class="modal-title">Current bid: £{{item.current_bid}}</h3>
+              {% endif %}
+                
+              <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            
+            <form action="{{ url_for('routes.bid', item_id=item.item_id) }}" method="POST">
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="price">Your bid</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">£</div>
+                    </div>
+                    <!-- adds validation against non-numeric and negative inputs -->
+                    {% if item.current_bid == 0 %}
+                      <input type="number" min={{item.price+0.10}} step=".01" class="form-control" id="new_bid" name="new_bid" placeholder="new bid" required/>
+                    {% else %}
+                      <input type="number" min={{item.current_bid+0.10}} step=".01" class="form-control" id="new_bid" name="new_bid" placeholder="new bid" required/>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-dark">Bid</button>
+              </div>
+            </form>
+              
+          </div>
+        </div>
+      </div>
+      {% else %}
+        <a class="btn btn-dark" href="{{ url_for('routes.my_items', item_id=item.item_id)}}" role="button">My items</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
